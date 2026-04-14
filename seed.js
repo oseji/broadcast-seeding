@@ -3,8 +3,8 @@ const axios = require("axios");
 
 const BASE_URL = process.env.BASE_URL;
 const TOKEN = process.env.BEARER_TOKEN;
-const TOTAL = 10000;
-const CONCURRENT_WORKERS = 30;
+const TOTAL = 20;
+const CONCURRENT_WORKERS = 10;
 
 const headers = {
     Authorization: `Bearer ${TOKEN}`,
@@ -116,262 +116,385 @@ const packageProfiles = [
         type: "documents",
         tags: ["no_stack", "high_value"],
         descriptions: [
-            "Legal documents, Contracts, Certificates",
-            "Invoices, Receipts, Letters",
-            "Academic transcripts, ID copies, Passports",
+            "Legal documents",
+            "Contracts",
+            "Certificates",
+            "Invoices",
+            "Academic transcripts",
+            "Passport",
+            "ID copies",
         ],
+        valuePerUnit: { min: 500, max: 2000 },
+        weightPerUnit: { min: 0.1, max: 0.5 },
     },
     {
         type: "electronics",
         tags: ["fragile", "no_stack", "high_value"],
         descriptions: [
-            "Laptop, Charger, Mouse, Keyboard",
-            "Smart TV, Remote, Cables",
-            "Camera, Lens, Memory cards",
+            "Laptop",
+            "Smart TV",
+            "Camera",
+            "Gaming console",
+            "Bluetooth speaker",
+            "Projector",
         ],
+        valuePerUnit: { min: 50000, max: 400000 },
+        weightPerUnit: { min: 1.5, max: 8 },
     },
     {
         type: "mobile_devices",
         tags: ["fragile", "high_value"],
-        descriptions: [
-            "iPhone, Case, Charger, Earphones",
-            "Android phone, Screen protector, Cable",
-            "Tablet, Stylus, Cover",
-        ],
+        descriptions: ["iPhone", "Android smartphone", "Tablet", "Smartwatch"],
+        valuePerUnit: { min: 80000, max: 1000000 },
+        weightPerUnit: { min: 0.2, max: 0.8 },
     },
     {
         type: "computer_accessories",
         tags: ["fragile", "no_stack"],
         descriptions: [
-            "Monitor, HDMI cable, Stand",
-            "External hard drive, USB hub, Cables",
-            "Mechanical keyboard, Mouse pad, Wrist rest",
+            "Monitor",
+            "Mechanical keyboard",
+            "External hard drive",
+            "Webcam",
+            "USB hub",
+            "Mouse",
         ],
+        valuePerUnit: { min: 5000, max: 80000 },
+        weightPerUnit: { min: 0.2, max: 4 },
     },
     {
         type: "appliances_small",
         tags: ["fragile", "bulky"],
         descriptions: [
-            "Blender, Toaster, Kettle",
-            "Iron, Hair dryer, Curling wand",
-            "Air fryer, Electric cooker, Thermos",
+            "Blender",
+            "Air fryer",
+            "Electric kettle",
+            "Toaster",
+            "Hair dryer",
+            "Iron",
         ],
+        valuePerUnit: { min: 8000, max: 60000 },
+        weightPerUnit: { min: 1, max: 5 },
     },
     {
         type: "fashion_clothing",
         tags: ["no_stack"],
         descriptions: [
-            "Ankara dress, Blazer, Trousers",
-            "Native wear, Agbada, Cap",
-            "Casual shirts, Jeans, Shorts",
+            "Ankara dress",
+            "Agbada set",
+            "Blazer",
+            "Native wear",
+            "Casual shirt",
+            "Jeans",
         ],
+        valuePerUnit: { min: 3000, max: 30000 },
+        weightPerUnit: { min: 0.3, max: 1 },
     },
     {
         type: "shoes_bags",
         tags: ["no_stack", "fragile"],
         descriptions: [
-            "Sneakers, Dress shoes, Sandals",
-            "Handbag, Backpack, Clutch",
-            "Loafers, Heels, Slippers",
+            "Sneakers",
+            "Dress shoes",
+            "Heels",
+            "Handbag",
+            "Backpack",
+            "Sandals",
         ],
+        valuePerUnit: { min: 5000, max: 80000 },
+        weightPerUnit: { min: 0.5, max: 1.5 },
     },
     {
         type: "cosmetics_personal_care",
         tags: ["liquid", "fragile"],
         descriptions: [
-            "Perfume, Body lotion, Face cream",
-            "Makeup kit, Foundation, Brushes",
-            "Shampoo, Conditioner, Body wash",
+            "Perfume",
+            "Body lotion",
+            "Face cream",
+            "Shampoo",
+            "Makeup kit",
+            "Body wash",
         ],
+        valuePerUnit: { min: 2000, max: 25000 },
+        weightPerUnit: { min: 0.2, max: 1 },
     },
     {
         type: "groceries_dry",
         tags: ["no_stack"],
         descriptions: [
-            "Rice, Beans, Semolina, Spaghetti",
-            "Flour, Sugar, Salt, Seasoning cubes",
-            "Oats, Cornflakes, Milk powder, Tea bags",
+            "Rice (5kg bag)",
+            "Beans",
+            "Semolina",
+            "Flour",
+            "Oats",
+            "Cornflakes",
         ],
+        valuePerUnit: { min: 2000, max: 8000 },
+        weightPerUnit: { min: 1, max: 5 },
     },
     {
         type: "groceries_fresh",
         tags: ["perishable", "cold_chain"],
         descriptions: [
-            "Tomatoes, Peppers, Onions, Vegetables",
-            "Fish, Chicken, Beef, Turkey",
-            "Fruits, Yoghurt, Fresh milk, Eggs",
+            "Fresh tomatoes",
+            "Chicken",
+            "Fresh fish",
+            "Beef",
+            "Mixed vegetables",
+            "Fresh fruits",
         ],
+        valuePerUnit: { min: 1500, max: 10000 },
+        weightPerUnit: { min: 0.5, max: 3 },
     },
     {
         type: "prepared_food",
         tags: ["hot_food", "perishable"],
         descriptions: [
-            "Jollof rice, Fried chicken, Coleslaw, Plantain",
-            "Egusi soup, Pounded yam, Assorted meat",
-            "Pepper soup, Goat meat, Bread rolls",
+            "Jollof rice",
+            "Egusi soup",
+            "Pepper soup",
+            "Fried chicken",
+            "Pounded yam",
+            "Ofada rice",
         ],
+        valuePerUnit: { min: 1500, max: 8000 },
+        weightPerUnit: { min: 0.5, max: 2 },
     },
     {
         type: "bakery_items",
         tags: ["perishable", "no_stack"],
         descriptions: [
-            "Fish pie, Eggrolls, Jam, Donut, Buns",
-            "Cupcakes, Croissant, Bread loaf, Cookies",
-            "Doughnuts, Cinnamon roll, Bagel, Muffins",
+            "Fish pie",
+            "Meat pie",
+            "Puff puff",
+            "Doughnut",
+            "Chin chin",
+            "Bread loaf",
+            "Cupcake",
         ],
+        valuePerUnit: { min: 500, max: 3000 },
+        weightPerUnit: { min: 0.1, max: 0.5 },
     },
     {
         type: "pharmaceuticals_otc",
         tags: ["fragile", "upright_only"],
         descriptions: [
-            "Paracetamol, Vitamin C, Cough syrup",
-            "Antacid, Pain relief gel, Eye drops",
-            "Multivitamins, Zinc tablets, Nasal spray",
+            "Paracetamol",
+            "Vitamin C tablets",
+            "Cough syrup",
+            "Eye drops",
+            "Antacid",
+            "Nasal spray",
         ],
+        valuePerUnit: { min: 500, max: 5000 },
+        weightPerUnit: { min: 0.05, max: 0.3 },
     },
     {
         type: "prescription_medicine",
         tags: ["fragile", "upright_only", "high_value"],
         descriptions: [
-            "Antibiotics, Blood pressure meds, Insulin",
-            "Asthma inhaler, Diabetic supplies, Syringes",
-            "Chemotherapy drugs, Immunosuppressants",
+            "Antibiotics",
+            "Blood pressure medication",
+            "Insulin",
+            "Asthma inhaler",
+            "Antidiabetic medication",
         ],
+        valuePerUnit: { min: 3000, max: 30000 },
+        weightPerUnit: { min: 0.05, max: 0.5 },
     },
     {
         type: "medical_supplies",
         tags: ["fragile", "no_stack"],
         descriptions: [
-            "Surgical gloves, Syringes, Bandages",
-            "Blood pressure monitor, Glucometer, Strips",
-            "Face masks, Hand sanitizer, Thermometer",
+            "Surgical gloves (box)",
+            "Syringes (pack)",
+            "Blood pressure monitor",
+            "Glucometer",
+            "Face masks (box)",
+            "Thermometer",
         ],
+        valuePerUnit: { min: 1000, max: 20000 },
+        weightPerUnit: { min: 0.1, max: 1 },
     },
     {
         type: "flowers_plants",
         tags: ["fragile", "perishable", "upright_only"],
         descriptions: [
-            "Roses, Lilies, Baby breath, Ribbon",
-            "Potted orchid, Succulent, Fertilizer",
-            "Sunflowers, Tulips, Wrapped bouquet",
+            "Rose bouquet",
+            "Potted orchid",
+            "Sunflower bouquet",
+            "Succulent plant",
+            "Tulip bouquet",
         ],
+        valuePerUnit: { min: 2000, max: 15000 },
+        weightPerUnit: { min: 0.3, max: 2 },
     },
     {
         type: "books_stationery",
         tags: ["no_stack"],
         descriptions: [
-            "Textbooks, Notebooks, Pens, Highlighters",
-            "Novel, Journal, Sticky notes, Markers",
-            "Engineering drawing set, Ruler, Calculator",
+            "Textbook",
+            "Novel",
+            "Journal",
+            "Stationery set",
+            "Engineering drawing set",
         ],
+        valuePerUnit: { min: 500, max: 8000 },
+        weightPerUnit: { min: 0.2, max: 1 },
     },
     {
         type: "furniture_small",
         tags: ["bulky", "no_stack"],
         descriptions: [
-            "Study chair, Lamp, Side table",
-            "Shelving unit, Wall clock, Mirror",
-            "Bean bag, Floor mat, Ottoman",
+            "Study chair",
+            "Side table",
+            "Wall shelf",
+            "Floor lamp",
+            "Bean bag",
         ],
+        valuePerUnit: { min: 10000, max: 80000 },
+        weightPerUnit: { min: 3, max: 15 },
     },
     {
         type: "home_decor",
         tags: ["fragile", "no_stack"],
         descriptions: [
-            "Picture frames, Vases, Candles, Figurines",
-            "Wall art, Decorative bowls, Table runner",
-            "Throw pillows, Curtain rods, Artificial flowers",
+            "Picture frame",
+            "Decorative vase",
+            "Wall art",
+            "Scented candle",
+            "Throw pillow",
         ],
+        valuePerUnit: { min: 1500, max: 20000 },
+        weightPerUnit: { min: 0.2, max: 2 },
     },
     {
         type: "household_items",
         tags: ["bulky"],
         descriptions: [
-            "Plates, Cups, Cutlery, Pot",
-            "Bedsheets, Pillowcases, Duvet, Towels",
-            "Cleaning supplies, Mop, Dustpan, Broom",
+            "Cooking pot",
+            "Bedsheet set",
+            "Duvet",
+            "Cutlery set",
+            "Towel set",
         ],
+        valuePerUnit: { min: 2000, max: 20000 },
+        weightPerUnit: { min: 0.5, max: 4 },
     },
     {
         type: "automobile_parts",
         tags: ["bulky", "no_stack"],
         descriptions: [
-            "Car battery, Wipers, Brake pads",
-            "Side mirror, Headlight bulb, Fuse box",
-            "Engine oil, Filter, Spark plugs",
+            "Car battery",
+            "Brake pads",
+            "Side mirror",
+            "Engine oil (4L)",
+            "Spark plugs (set)",
         ],
+        valuePerUnit: { min: 5000, max: 80000 },
+        weightPerUnit: { min: 1, max: 15 },
     },
     {
         type: "laundry",
         tags: ["no_stack"],
         descriptions: [
-            "Washed shirts, Trousers, Suits",
-            "Dry cleaned gowns, Native wear, Jackets",
-            "Folded bedsheets, Duvet, Pillowcases",
+            "Dry cleaned suit",
+            "Washed shirts (pack)",
+            "Dry cleaned gown",
+            "Folded bedsheets",
+            "Dry cleaned native wear",
         ],
+        valuePerUnit: { min: 1000, max: 8000 },
+        weightPerUnit: { min: 0.3, max: 2 },
     },
     {
         type: "alcohol_beverages",
         tags: ["liquid", "fragile", "upright_only"],
         descriptions: [
-            "Red wine, White wine, Champagne",
-            "Whiskey, Vodka, Gin, Rum",
-            "Beer pack, Cider, Craft drinks",
+            "Red wine bottle",
+            "Whiskey bottle",
+            "Champagne bottle",
+            "Beer pack (12)",
+            "Vodka bottle",
         ],
+        valuePerUnit: { min: 3000, max: 50000 },
+        weightPerUnit: { min: 0.5, max: 5 },
     },
     {
         type: "jewelry_valuables",
         tags: ["fragile", "high_value"],
         descriptions: [
-            "Gold necklace, Earrings, Bracelet",
-            "Diamond ring, Wristwatch, Cufflinks",
-            "Silver chain, Anklet, Brooch",
+            "Gold necklace",
+            "Diamond ring",
+            "Wristwatch",
+            "Gold bracelet",
+            "Silver earrings",
         ],
+        valuePerUnit: { min: 20000, max: 500000 },
+        weightPerUnit: { min: 0.05, max: 0.3 },
     },
     {
         type: "toys_games",
         tags: ["fragile", "no_stack"],
         descriptions: [
-            "Action figures, Board game, Puzzle",
-            "Remote control car, Drone, Lego set",
-            "Doll, Play kitchen, Toy blocks",
+            "Remote control car",
+            "Lego set",
+            "Board game",
+            "Action figure",
+            "Drone",
         ],
+        valuePerUnit: { min: 3000, max: 50000 },
+        weightPerUnit: { min: 0.3, max: 2 },
     },
     {
         type: "sports_equipment",
         tags: ["bulky"],
         descriptions: [
-            "Football boots, Jersey, Shin guards",
-            "Yoga mat, Resistance bands, Jump rope",
-            "Tennis racket, Badminton set, Shuttlecock",
+            "Football boots",
+            "Yoga mat",
+            "Tennis racket",
+            "Dumbbell (pair)",
+            "Badminton set",
         ],
+        valuePerUnit: { min: 3000, max: 40000 },
+        weightPerUnit: { min: 0.5, max: 5 },
     },
     {
         type: "pet_food",
         tags: ["perishable"],
         descriptions: [
-            "Dog food, Dog treats, Chew bones",
-            "Cat food, Cat milk, Hairball remedy",
-            "Fish flakes, Turtle food, Bird seed",
+            "Dog food (5kg)",
+            "Cat food (3kg)",
+            "Dog treats",
+            "Bird seed",
+            "Fish flakes",
         ],
+        valuePerUnit: { min: 2000, max: 15000 },
+        weightPerUnit: { min: 0.5, max: 5 },
     },
     {
         type: "returns_parcel",
         tags: ["returns_parcel"],
         descriptions: [
-            "Returned clothing item, Original packaging",
-            "Defective electronics return, Accessories",
-            "Wrong item return, Invoice copy",
+            "Returned clothing item",
+            "Defective electronics return",
+            "Wrong item return",
         ],
+        valuePerUnit: { min: 1000, max: 50000 },
+        weightPerUnit: { min: 0.2, max: 3 },
     },
     {
         type: "mixed_goods",
         tags: ["no_stack", "fragile"],
         descriptions: [
-            "Groceries, Toiletries, Stationery, Snacks",
-            "Electronics, Clothing, Documents, Accessories",
-            "Food items, Drinks, Personal care, Books",
+            "Groceries",
+            "Toiletries",
+            "Stationery",
+            "Personal care items",
+            "Household supplies",
         ],
+        valuePerUnit: { min: 2000, max: 20000 },
+        weightPerUnit: { min: 0.5, max: 3 },
     },
 ];
 
@@ -453,12 +576,30 @@ const generatePayload = (index) => {
     const shuffledTags = [...profile.tags].sort(() => Math.random() - 0.5);
     const tagCount = Math.min(shuffledTags.length, randomInt(1, 2));
     const selectedTags = shuffledTags.slice(0, tagCount);
+
     const description = randomItem(profile.descriptions);
 
-    const productValue = randomInt(6, 30) * 500;
+    const noOfPackages = randomInt(1, 10);
+
+    // Value scales with number of packages + random variance per unit
+    const valuePerUnit = randomInt(
+        profile.valuePerUnit.min,
+        profile.valuePerUnit.max,
+    );
+    const productValue = valuePerUnit * noOfPackages;
+
+    // Offer price is 20–35% of product value, rounded to nearest 50
     const offerPrice =
         Math.round((productValue * (0.2 + Math.random() * 0.15)) / 50) * 50;
-    const weight = randomInt(1, 30) * 0.5;
+
+    // Weight scales with number of packages + random variance per unit
+    const weightPerUnit =
+        profile.weightPerUnit.min +
+        Math.random() * (profile.weightPerUnit.max - profile.weightPerUnit.min);
+    const weightOfPackages = Math.min(
+        Math.round(weightPerUnit * noOfPackages * 10) / 10,
+        20,
+    );
     const firstName = randomItem(firstNames);
     const lastName = randomItem(lastNames);
     const phone = `${randomItem(phonePrefixes)}${randomInt(1000000, 9999999)}`;
@@ -469,7 +610,7 @@ const generatePayload = (index) => {
         isFragile: selectedTags.includes("fragile"),
         packageType: profile.type,
         handlingTags: selectedTags,
-        noOfPackages: randomInt(1, 10),
+        noOfPackages,
         offerPrice,
         productImage: "https://res.cloudinary.com/demo/image/upload/sample.jpg",
         productValue,
@@ -478,7 +619,7 @@ const generatePayload = (index) => {
             phone,
         },
         to: location.to,
-        weightOfPackages: weight,
+        weightOfPackages,
         durationMin: location.durationMin,
         distanceKm: location.distanceKm,
     };
@@ -487,15 +628,16 @@ const generatePayload = (index) => {
 const createAndBroadcast = async (index) => {
     const payload = generatePayload(index);
 
-    // 1. Create delivery
+    // create delivery
     const createRes = await axios.post(`${BASE_URL}/deliveries/init`, payload, {
         headers,
     });
 
+    // extract deliveryID from response
     const deliveryId = createRes.data.data.deliveryId;
     console.log(`[${index}/${TOTAL}] ✅ Created:     ${deliveryId}`);
 
-    // 2. Broadcast delivery
+    // broadcast delivery
     await axios.post(
         `${BASE_URL}/deliveries/${deliveryId}/publish`,
         {},
