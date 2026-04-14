@@ -3,7 +3,8 @@ const axios = require("axios");
 
 const BASE_URL = process.env.BASE_URL;
 const TOKEN = process.env.BEARER_TOKEN;
-const TOTAL = 10;
+const TOTAL = 10000;
+const CONCURRENT_WORKERS = 30;
 
 const headers = {
     Authorization: `Bearer ${TOKEN}`,
@@ -505,23 +506,40 @@ const createAndBroadcast = async (index) => {
 };
 
 const run = async () => {
-    console.log(`Starting — ${TOTAL} deliveries to create and broadcast\n`);
+    console.log(
+        `🚀 Starting — ${TOTAL} deliveries across ${CONCURRENT_WORKERS} workers\n`,
+    );
 
     let successCount = 0;
     let failCount = 0;
+    let currentIndex = 1;
 
-    for (let i = 1; i <= TOTAL; i++) {
-        try {
-            await createAndBroadcast(i);
-            successCount++;
-        } catch (err) {
-            failCount++;
-            const message = err.response
-                ? `HTTP ${err.response.status} — ${JSON.stringify(err.response.data)}`
-                : err.message;
-            console.error(`[${i}/${TOTAL}] ❌ Failed: ${message}`);
+    // Each worker keeps picking the next available index until TOTAL is reached
+    const worker = async (workerId) => {
+        while (true) {
+            const index = currentIndex++;
+            if (index > TOTAL) break;
+
+            try {
+                await createAndBroadcast(index);
+                successCount++;
+            } catch (err) {
+                failCount++;
+                const message = err.response
+                    ? `HTTP ${err.response.status} — ${JSON.stringify(err.response.data)}`
+                    : err.message;
+                console.error(
+                    `[worker-${workerId}] [${index}/${TOTAL}] ❌ Failed: ${message}`,
+                );
+            }
         }
-    }
+    };
+
+    // Spin up all workers and run them in parallel
+    const workers = Array.from({ length: CONCURRENT_WORKERS }, (_, i) =>
+        worker(i + 1),
+    );
+    await Promise.all(workers);
 
     console.log(`\n✅ Done — ${successCount} succeeded, ${failCount} failed`);
 };
