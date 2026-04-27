@@ -3,14 +3,16 @@ const axios = require("axios");
 
 const BASE_URL = process.env.BASE_URL;
 const TOKEN = process.env.BEARER_TOKEN;
-const TOTAL = 20;
-const CONCURRENT_WORKERS = 10;
+const TOTAL = 100;
+const CONCURRENT_WORKERS = 1;
 
 const headers = {
     Authorization: `Bearer ${TOKEN}`,
     "Content-Type": "application/json",
     RoutagAccess: "1",
 };
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const locationPairs = [
     {
@@ -109,6 +111,286 @@ const locationPairs = [
         durationMin: 76,
         distanceKm: 49.6,
     },
+    {
+        from: {
+            address: "Ikeja City Mall, Lagos",
+            latitude: 6.6143785,
+            longitude: 3.357768,
+        },
+        to: {
+            address: "Lagos Oriental Hotel, Lagos",
+            latitude: 6.436242,
+            longitude: 3.4447826,
+        },
+        durationMin: 25,
+        distanceKm: 29.8,
+    },
+    {
+        from: {
+            address: "Lagos Oriental Hotel, Lagos",
+            latitude: 6.436242,
+            longitude: 3.4447826,
+        },
+        to: {
+            address: "National Stadium, Surulere, Lagos",
+            latitude: 6.4971425,
+            longitude: 3.364988,
+        },
+        durationMin: 16,
+        distanceKm: 14,
+    },
+    {
+        from: {
+            address: "National Stadium, Surulere, Lagos",
+            latitude: 6.4971425,
+            longitude: 3.364988,
+        },
+        to: {
+            address: "University of Lagos, Akoka, Lagos",
+            latitude: 6.5120272,
+            longitude: 3.3935314,
+        },
+        durationMin: 9,
+        distanceKm: 7,
+    },
+    {
+        from: {
+            address: "University of Lagos, Akoka, Lagos",
+            latitude: 6.5120272,
+            longitude: 3.3935314,
+        },
+        to: {
+            address: "Tafawa Balewa Square, Lagos",
+            latitude: 6.4470741,
+            longitude: 3.4015101,
+        },
+        durationMin: 12,
+        distanceKm: 12.2,
+    },
+    {
+        from: {
+            address: "Tafawa Balewa Square, Lagos",
+            latitude: 6.4470741,
+            longitude: 3.4015101,
+        },
+        to: {
+            address: "National Theatre, Lagos",
+            latitude: 6.4746792,
+            longitude: 3.3687699,
+        },
+        durationMin: 9,
+        distanceKm: 6,
+    },
+    {
+        from: {
+            address: "National Theatre, Lagos",
+            latitude: 6.4746792,
+            longitude: 3.3687699,
+        },
+        to: {
+            address: "Lekki Phase 1, Lagos",
+            latitude: 6.4528469,
+            longitude: 3.4787838,
+        },
+        durationMin: 20,
+        distanceKm: 17.6,
+    },
+    {
+        from: {
+            address: "Lekki Phase 1, Lagos",
+            latitude: 6.4528469,
+            longitude: 3.4787838,
+        },
+        to: {
+            address: "Victoria Island, Lagos",
+            latitude: 6.4300279,
+            longitude: 3.4259904,
+        },
+        durationMin: 11,
+        distanceKm: 10.8,
+    },
+    {
+        from: {
+            address: "Victoria Island, Lagos",
+            latitude: 6.4300279,
+            longitude: 3.4259904,
+        },
+        to: {
+            address: "Ikoyi, Lagos",
+            latitude: 6.4516268,
+            longitude: 3.4117815,
+        },
+        durationMin: 6,
+        distanceKm: 5.6,
+    },
+    {
+        from: {
+            address: "Ikoyi, Lagos",
+            latitude: 6.4516268,
+            longitude: 3.4117815,
+        },
+        to: {
+            address: "Yaba, Lagos",
+            latitude: 6.5114693,
+            longitude: 3.3699982,
+        },
+        durationMin: 10,
+        distanceKm: 11.7,
+    },
+    {
+        from: {
+            address: "Yaba, Lagos",
+            latitude: 6.5114693,
+            longitude: 3.3699982,
+        },
+        to: {
+            address: "Surulere, Lagos",
+            latitude: 6.4855737,
+            longitude: 3.3539907,
+        },
+        durationMin: 11,
+        distanceKm: 7.6,
+    },
+    {
+        from: {
+            address: "Surulere, Lagos",
+            latitude: 6.4855737,
+            longitude: 3.3539907,
+        },
+        to: {
+            address: "Festac Town, Lagos",
+            latitude: 6.4554752,
+            longitude: 3.2489236,
+        },
+        durationMin: 11,
+        distanceKm: 13.3,
+    },
+    {
+        from: {
+            address: "Festac Town, Lagos",
+            latitude: 6.4554752,
+            longitude: 3.2489236,
+        },
+        to: {
+            address: "Sangotedo, Lagos",
+            latitude: 6.471022,
+            longitude: 3.635581,
+        },
+        durationMin: 51,
+        distanceKm: 55.6,
+    },
+    {
+        from: {
+            address: "Sangotedo, Lagos",
+            latitude: 6.471022,
+            longitude: 3.635581,
+        },
+        to: {
+            address: "Oshodi, Lagos",
+            latitude: 6.5565591,
+            longitude: 3.3512795,
+        },
+        durationMin: 37,
+        distanceKm: 48.9,
+    },
+    {
+        from: {
+            address: "Oshodi, Lagos",
+            latitude: 6.5565591,
+            longitude: 3.3512795,
+        },
+        to: {
+            address: "Ajah, Lagos",
+            latitude: 6.4694716,
+            longitude: 3.5623861,
+        },
+        durationMin: 36,
+        distanceKm: 37.2,
+    },
+    {
+        from: {
+            address: "Ajah, Lagos",
+            latitude: 6.4694716,
+            longitude: 3.5623861,
+        },
+        to: {
+            address: "Ikeja, Lagos",
+            latitude: 6.5974727,
+            longitude: 3.3432815,
+        },
+        durationMin: 36,
+        distanceKm: 44.6,
+    },
+    {
+        from: {
+            address: "Ikeja City Mall, Lagos",
+            latitude: 6.6143785,
+            longitude: 3.357768,
+        },
+        to: {
+            address: "Tafawa Balewa Square, Lagos",
+            latitude: 6.4470741,
+            longitude: 3.4015101,
+        },
+        durationMin: 19,
+        distanceKm: 24.2,
+    },
+    {
+        from: {
+            address: "National Stadium, Surulere, Lagos",
+            latitude: 6.4971425,
+            longitude: 3.364988,
+        },
+        to: {
+            address: "Festac Town, Lagos",
+            latitude: 6.4554752,
+            longitude: 3.2489236,
+        },
+        durationMin: 15,
+        distanceKm: 16.9,
+    },
+    {
+        from: {
+            address: "Lekki Phase 1, Lagos",
+            latitude: 6.4528469,
+            longitude: 3.4787838,
+        },
+        to: {
+            address: "Lagos Oriental Hotel, Lagos",
+            latitude: 6.436242,
+            longitude: 3.4447826,
+        },
+        durationMin: 9,
+        distanceKm: 6.1,
+    },
+    {
+        from: {
+            address: "University of Lagos, Akoka, Lagos",
+            latitude: 6.5120272,
+            longitude: 3.3935314,
+        },
+        to: {
+            address: "Sangotedo, Lagos",
+            latitude: 6.471022,
+            longitude: 3.635581,
+        },
+        durationMin: 37,
+        distanceKm: 44.6,
+    },
+    {
+        from: {
+            address: "Victoria Island, Lagos",
+            latitude: 6.4300279,
+            longitude: 3.4259904,
+        },
+        to: {
+            address: "Oshodi, Lagos",
+            latitude: 6.5565591,
+            longitude: 3.3512795,
+        },
+        durationMin: 18,
+        distanceKm: 20.6,
+    },
 ];
 
 const packageProfiles = [
@@ -126,6 +408,7 @@ const packageProfiles = [
         ],
         valuePerUnit: { min: 500, max: 2000 },
         weightPerUnit: { min: 0.1, max: 0.5 },
+        // no maxPackages — even 10 documents is fine weight-wise
     },
     {
         type: "electronics",
@@ -140,6 +423,7 @@ const packageProfiles = [
         ],
         valuePerUnit: { min: 50000, max: 400000 },
         weightPerUnit: { min: 1.5, max: 8 },
+        maxPackages: 2, // 2 smart TVs at 8kg each = 16kg, cap keeps it safe
     },
     {
         type: "mobile_devices",
@@ -161,6 +445,7 @@ const packageProfiles = [
         ],
         valuePerUnit: { min: 5000, max: 80000 },
         weightPerUnit: { min: 0.2, max: 4 },
+        maxPackages: 5,
     },
     {
         type: "appliances_small",
@@ -175,6 +460,7 @@ const packageProfiles = [
         ],
         valuePerUnit: { min: 8000, max: 60000 },
         weightPerUnit: { min: 1, max: 5 },
+        maxPackages: 4,
     },
     {
         type: "fashion_clothing",
@@ -231,6 +517,7 @@ const packageProfiles = [
         ],
         valuePerUnit: { min: 2000, max: 8000 },
         weightPerUnit: { min: 1, max: 5 },
+        maxPackages: 4,
     },
     {
         type: "groceries_fresh",
@@ -245,6 +532,7 @@ const packageProfiles = [
         ],
         valuePerUnit: { min: 1500, max: 10000 },
         weightPerUnit: { min: 0.5, max: 3 },
+        maxPackages: 6,
     },
     {
         type: "prepared_food",
@@ -354,6 +642,7 @@ const packageProfiles = [
         ],
         valuePerUnit: { min: 10000, max: 80000 },
         weightPerUnit: { min: 3, max: 15 },
+        maxPackages: 2,
     },
     {
         type: "home_decor",
@@ -380,6 +669,7 @@ const packageProfiles = [
         ],
         valuePerUnit: { min: 2000, max: 20000 },
         weightPerUnit: { min: 0.5, max: 4 },
+        maxPackages: 4,
     },
     {
         type: "automobile_parts",
@@ -393,6 +683,7 @@ const packageProfiles = [
         ],
         valuePerUnit: { min: 5000, max: 80000 },
         weightPerUnit: { min: 1, max: 15 },
+        maxPackages: 2,
     },
     {
         type: "laundry",
@@ -419,6 +710,7 @@ const packageProfiles = [
         ],
         valuePerUnit: { min: 3000, max: 50000 },
         weightPerUnit: { min: 0.5, max: 5 },
+        maxPackages: 4,
     },
     {
         type: "jewelry_valuables",
@@ -458,6 +750,7 @@ const packageProfiles = [
         ],
         valuePerUnit: { min: 3000, max: 40000 },
         weightPerUnit: { min: 0.5, max: 5 },
+        maxPackages: 4,
     },
     {
         type: "pet_food",
@@ -471,6 +764,7 @@ const packageProfiles = [
         ],
         valuePerUnit: { min: 2000, max: 15000 },
         weightPerUnit: { min: 0.5, max: 5 },
+        maxPackages: 4,
     },
     {
         type: "returns_parcel",
@@ -495,6 +789,91 @@ const packageProfiles = [
         ],
         valuePerUnit: { min: 2000, max: 20000 },
         weightPerUnit: { min: 0.5, max: 3 },
+        maxPackages: 6,
+    },
+    {
+        from: {
+            address: "Maryland Mall, Lagos",
+            latitude: 6.5671147,
+            longitude: 3.3673102,
+        },
+        to: {
+            address: "Federal College of Education, Akoka",
+            latitude: 6.5215316,
+            longitude: 3.3847457,
+        },
+        durationMin: 11,
+        distanceKm: 9.7,
+    },
+    {
+        from: {
+            address: "Federal College of Education, Akoka",
+            latitude: 6.5215316,
+            longitude: 3.3847457,
+        },
+        to: {
+            address: "Computer Village, Ikeja",
+            latitude: 6.5942451,
+            longitude: 3.3402182,
+        },
+        durationMin: 12,
+        distanceKm: 13.6,
+    },
+    {
+        from: {
+            address: "Computer Village, Ikeja",
+            latitude: 6.5942451,
+            longitude: 3.3402182,
+        },
+        to: {
+            address: "Radisson Blu Anchorage Hotel, Victoria Island",
+            latitude: 6.4368874,
+            longitude: 3.4169181,
+        },
+        durationMin: 21,
+        distanceKm: 24.2,
+    },
+    {
+        from: {
+            address: "Radisson Blu Anchorage Hotel, Victoria Island",
+            latitude: 6.4368874,
+            longitude: 3.4169181,
+        },
+        to: {
+            address: "Sheraton Lagos Hotel, Ikeja",
+            latitude: 6.5833755,
+            longitude: 3.3600411,
+        },
+        durationMin: 18,
+        distanceKm: 20.6,
+    },
+    {
+        from: {
+            address: "Sheraton Lagos Hotel, Ikeja",
+            latitude: 6.5833755,
+            longitude: 3.3600411,
+        },
+        to: {
+            address: "Freedom Park, Lagos Island",
+            latitude: 6.4488192,
+            longitude: 3.3965307,
+        },
+        durationMin: 19,
+        distanceKm: 20,
+    },
+    {
+        from: {
+            address: "Maryland Mall, Lagos",
+            latitude: 6.5671147,
+            longitude: 3.3673102,
+        },
+        to: {
+            address: "Sheraton Lagos Hotel, Ikeja",
+            latitude: 6.5833755,
+            longitude: 3.3600411,
+        },
+        durationMin: 4,
+        distanceKm: 2.7,
     },
 ];
 
@@ -561,13 +940,10 @@ const phonePrefixes = [
     "0905",
 ];
 
-const randomItem = (arr) => {
-    return arr[Math.floor(Math.random() * arr.length)];
-};
+const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-const randomInt = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+const randomInt = (min, max) =>
+    Math.floor(Math.random() * (max - min + 1)) + min;
 
 const generatePayload = (index) => {
     const profile = packageProfiles[index % packageProfiles.length];
@@ -579,20 +955,23 @@ const generatePayload = (index) => {
 
     const description = randomItem(profile.descriptions);
 
-    const noOfPackages = randomInt(1, 10);
+    // noOfPackages respects per-profile max where defined
+    const maxPackages = profile.maxPackages || 10;
+    const noOfPackages = randomInt(1, maxPackages);
 
-    // Value scales with number of packages + random variance per unit
+    // Value scales with number of packages
     const valuePerUnit = randomInt(
         profile.valuePerUnit.min,
         profile.valuePerUnit.max,
     );
-    const productValue = valuePerUnit * noOfPackages;
+    const rawValue = valuePerUnit * noOfPackages;
+    const productValue = Math.round(rawValue / 100) * 100;
 
     // Offer price is 20–35% of product value, rounded to nearest 50
     const offerPrice =
         Math.round((productValue * (0.2 + Math.random() * 0.15)) / 50) * 50;
 
-    // Weight scales with number of packages + random variance per unit
+    // Weight scales with number of packages, hard capped at 20kg
     const weightPerUnit =
         profile.weightPerUnit.min +
         Math.random() * (profile.weightPerUnit.max - profile.weightPerUnit.min);
@@ -600,6 +979,7 @@ const generatePayload = (index) => {
         Math.round(weightPerUnit * noOfPackages * 10) / 10,
         20,
     );
+
     const firstName = randomItem(firstNames);
     const lastName = randomItem(lastNames);
     const phone = `${randomItem(phonePrefixes)}${randomInt(1000000, 9999999)}`;
@@ -633,7 +1013,7 @@ const createAndBroadcast = async (index) => {
         headers,
     });
 
-    // extract deliveryID from response
+    // extract deliveryId from response
     const deliveryId = createRes.data.data.deliveryId;
     console.log(`[${index}/${TOTAL}] ✅ Created:     ${deliveryId}`);
 
@@ -656,7 +1036,6 @@ const run = async () => {
     let failCount = 0;
     let currentIndex = 1;
 
-    // Each worker keeps picking the next available index until TOTAL is reached
     const worker = async (workerId) => {
         while (true) {
             const index = currentIndex++;
@@ -674,10 +1053,11 @@ const run = async () => {
                     `[worker-${workerId}] [${index}/${TOTAL}] ❌ Failed: ${message}`,
                 );
             }
+
+            await sleep(400);
         }
     };
 
-    // Spin up all workers and run them in parallel
     const workers = Array.from({ length: CONCURRENT_WORKERS }, (_, i) =>
         worker(i + 1),
     );
